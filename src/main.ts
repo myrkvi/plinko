@@ -7,7 +7,10 @@ export default function run() {
     const BALL_DIAMETER = 50;
     const NUM_SEPS = document.querySelector("#slots")?.childElementCount ?? 1;
 
-    let start_x = BALL_DIAMETER + Math.random() * (WIDTH - (BALL_DIAMETER * 2))
+    const start_x = BALL_DIAMETER + Math.random() * (WIDTH - (BALL_DIAMETER * 2))
+    const bounciness = 0.3 + Math.random() * 0.5;
+    const mass = 0.5 + Math.random();
+
 
     const engine = Engine.create();
     const render = Render.create({
@@ -22,7 +25,7 @@ export default function run() {
     const ground = Bodies.rectangle(300, 800, 610, 2, { isStatic: true });
     const wallLeft = Bodies.rectangle(0, 400, 2, 810, { isStatic: true })
     const wallRight = Bodies.rectangle(600, 400, 2, 810, { isStatic: true });
-    const ball = Bodies.circle(start_x, 0, BALL_DIAMETER / 2, { restitution: 0.5 });
+    const ball = Bodies.circle(start_x, 0, BALL_DIAMETER / 2, { restitution: bounciness, mass: mass});
 
     const seps = [];
     for (let w = 1; w < NUM_SEPS; w++) {
@@ -40,10 +43,18 @@ export default function run() {
     const pins: Array<Body> = [];
 
     let flip = true;
-    for (let y = BALL_DIAMETER * 2; y < (HEIGHT - 100); y += BALL_DIAMETER * 1.25) {
+    for (let y = BALL_DIAMETER * 2; y < (HEIGHT - 100); y += BALL_DIAMETER + 15) {
         let f = (flip ? 0 : BALL_DIAMETER / 2)
-        for (let x = BALL_DIAMETER/2 + f; x <= (WIDTH); x += BALL_DIAMETER * 1.25) {
-            pins.push(pin(x, y));
+        for (let x = BALL_DIAMETER/2 + f; x <= (WIDTH+10); x += BALL_DIAMETER + 15) {
+            if (x >= (BALL_DIAMETER + 10) && x <= (WIDTH - (BALL_DIAMETER + 10))) {
+                pins.push(pin(x, y));
+                continue;
+            } /*else if (x <= BALL_DIAMETER/2 || x >= (WIDTH - (BALL_DIAMETER/2))) {
+                pins.push(pin(x, y));
+                continue;
+            }*/
+            const left = x < WIDTH/2;
+            pins.push(Bodies.trapezoid(left ? x - 10 : x + 10, y, left ? 25 : -25, 15, 2, { isStatic: true}))
         }
         flip = !flip;
     }
