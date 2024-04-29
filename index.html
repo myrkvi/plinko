@@ -52,6 +52,9 @@
       }
 
       function addPerson(name) {
+        if (name.trim() === "")
+          return;
+        
         const slots = document.querySelector("#slots");
 
         let item = document.createElement("div");
