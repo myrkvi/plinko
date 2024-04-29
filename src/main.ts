@@ -54,7 +54,7 @@ export default function run() {
                 continue;
             }*/
             const left = x < WIDTH/2;
-            pins.push(Bodies.trapezoid(left ? x - 10 : x + 10, y, left ? 25 : -25, 15, 2, { isStatic: true}))
+            pins.push(Bodies.trapezoid(left ? x - 10 : x + 10, y + BALL_DIAMETER/3 + 5, left ? 35 : -35, 25, 2, { isStatic: true}))
         }
         flip = !flip;
     }
