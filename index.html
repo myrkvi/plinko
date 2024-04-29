@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plinko</title>
+    <style>
+      div.item {
+        flex: 1;
+        text-align: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      canvas {
+        background-color: black;
+      }
+
+      button.x {
+        border: none;
+        background: none;
+        margin: 0;
+      }
+
+      textarea#name {
+        resize: none;
+        offset: -1em;
+        padding: none;
+      }
+
+      button#startButton {
+        font-size: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+
+      function remove(event) {
+        event.currentTarget.parentElement.remove();
+      }
+
+      function add(event) {
+        const parent = event.currentTarget.parentElement;
+        const names = parent.querySelector("#name").value;
+        if (names.trim() !== "")
+          names.split("\n").forEach(name => { addPerson(name); console.log(name)});
+        
+        event.currentTarget.value = "";
+      }
+
+      function addPerson(name) {
+        const slots = document.querySelector("#slots");
+
+        let item = document.createElement("div");
+        item.className = "item";
+        item.innerText = name;
+        item.innerHTML += `<button class="x" onclick="remove(event)">❌</button>`
+
+        slots.appendChild(item);
+      }
+
+      function enterPressed(event) {
+        console.log("Hello")
+        if (event.key === "Enter")
+          add(event)
+      }
+    </script>
+
+    <canvas id="plinko" width="600" height="800"></canvas>
+    <script type="module" src="src/main.ts"></script>
+    <div id="slots" style="display: flex; flex-direction: row; width: 600px; justify-content: space-between;">
+    </div>
+    <br>
+    <div style="display: flex; flex-direction: row; align-items: baseline">
+      <label for="name">Name:</label>
+      <textarea id="name" rows="1" onkeypress="enterPressed(event)"></textarea>
+      <button onclick="add(event)">➕</button>
+    </div>
+    <br>
+    <button id="startButton">▶️</button>
+  </body>
+</html>
